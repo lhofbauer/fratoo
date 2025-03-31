@@ -26,7 +26,9 @@
 .. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
-
+.. image:: https://readthedocs.org/projects/fratoo/badge/?version=latest
+    :alt: ReadTheDocs
+    :target: https://fratoo.readthedocs.io/en/latest/
 |
 
 ======
@@ -34,16 +36,18 @@ fratoo
 ======
 
 
-    Add a short description here!
+    Compact multi-scale modelling framework wrapped around OSeMOSYS
+
+This repository contains the code and documentation of fratoo.
+
+The documentation is also hosted on `ReadTheDocs <https://fratoo.readthedocs.io/en/latest/>`_.
+
+.. warning::
+   fratoo and its documentation are still under heavy development and a more stable version is expected to be published later during 2025.
 
 
-A longer description of your project goes here...
+Acknowledgements
+================
 
+The initial development of fratoo was supported by the Engineering and Physical Sciences Research Council, UK, under grant EP/R513143/1.
 
-.. _pyscaffold-notes:
-
-Note
-====
-
-This project has been set up using PyScaffold 4.5. For details and usage
-information on PyScaffold see https://pyscaffold.org/.

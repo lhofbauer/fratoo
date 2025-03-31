@@ -1,40 +1,34 @@
-======
-fratoo
-======
+==================================
+Welcome to fratoo's documentation!
+==================================
 
-This is the documentation of **fratoo**.
+fratoo is an open-source multi-scale modelling framework based on `OSeMOSYS <http://www.osemosys.org/>`_. It facilitates the development and analysis of multi-scale energy system models and pathways.
 
-.. note::
 
-    This is the main page of your project's `Sphinx`_ documentation.
-    It is formatted in `reStructuredText`_. Add additional pages
-    by creating rst-files in ``docs`` and adding them to the `toctree`_ below.
-    Use then `references`_ in order to link them from this page, e.g.
-    :ref:`authors` and :ref:`changes`.
-
-    It is also possible to refer to the documentation of other Python packages
-    with the `Python domain syntax`_. By default you can reference the
-    documentation of `Sphinx`_, `Python`_, `NumPy`_, `SciPy`_, `matplotlib`_,
-    `Pandas`_, `Scikit-Learn`_. You can add more by extending the
-    ``intersphinx_mapping`` in your Sphinx's ``conf.py``.
-
-    The pretty useful extension `autodoc`_ is activated by default and lets
-    you include documentation from docstrings. Docstrings can be written in
-    `Google style`_ (recommended!), `NumPy style`_ and `classical style`_.
-
+.. warning::
+   fratoo and its documentation are still under heavy development and a more stable version is expected to be published later during 2025.
 
 Contents
 ========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   Overview <readme>
+   Introduction <introduction>
+   Installation <installation>
+   Building <building>
+   Running <running>
+   Tutorial <tutorial>
    Contributions & Help <contributing>
    License <license>
    Authors <authors>
    Changelog <changelog>
    Module Reference <api/modules>
+
+Acknowledgements
+================
+
+The initial development of fratoo was supported by the Engineering and Physical Sciences Research Council, UK, under grant EP/R513143/1.
 
 
 Indices and tables

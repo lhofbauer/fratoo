@@ -1,0 +1,10 @@
+REGION,TECHNOLOGY,FUEL,MODE_OF_OPERATION,YEAR,VALUE
+:*2,TF,EL,:*,:*,1
+LocA,PV,EL,0,:*,1
+LocB,PV,EL,0,:*,1
+LocC,PV,EL,0,:*,1
+LocD,PV,EL,0,:*,1
+LocE,PV,EL,0,:*,1
+RegA,WT,EL,0,:*,1
+RegB,WT,EL,0,:*,1
+Nat,CP,EL,0,:*,1
