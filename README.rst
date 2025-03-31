@@ -42,8 +42,8 @@ This repository contains the code and documentation of fratoo.
 
 The documentation is also hosted on `ReadTheDocs <https://fratoo.readthedocs.io/en/latest/>`_.
 
-> [!WARNING]  
-> fratoo and its documentation are still under heavy development and a more stable version is expected to be published later during 2025.
+.. warning::
+   fratoo and its documentation are still under heavy development and a more stable version is expected to be published later during 2025.
 
 
 Acknowledgements
