@@ -6,6 +6,8 @@ fratoo is an open-source multi-scale modelling framework based on `OSeMOSYS <htt
 
 fratoo has so far been applied for the development of two energy system models: `UK-MOSEM <https://github.com/lhofbauer/uk-mosem>`_ and `CORE-WESM <https://github.com/ClimateCompatibleGrowth/CORE-WESM>`_.
 
+fratoo as a generic framework is still in its early development stages and applying the current version to different models and use cases can potentially bring up issues (which can be reported via GitHub).
+
 This documentation currently focuses on key elements of fratoo and is expected to be extended and updated in future.
 
 Contents
