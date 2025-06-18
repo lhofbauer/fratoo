@@ -27,7 +27,7 @@
 Contributing
 ============
 
-Welcome to ``fratoo`` contributor's guide.
+Welcome to ``fratoo`` contributor's guide. This is currently a standard guide and might be updated in future.
 
 This document focuses on getting any potential contributor familiarized
 with the development processes, but `other kinds of contributions`_ are also
