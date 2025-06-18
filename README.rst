@@ -44,6 +44,8 @@ The documentation is also hosted on `ReadTheDocs <https://fratoo.readthedocs.io/
 
 fratoo has so far been applied for the development of two energy system models: `UK-MOSEM <https://github.com/lhofbauer/uk-mosem>`_ and `CORE-WESM <https://github.com/ClimateCompatibleGrowth/CORE-WESM>`_.
 
+fratoo is still under development and applying the current version to different models and use cases can potentially bring up issues (which can be reported via the issue tracker). Contributions towards a more stable version of the framework are welcome.
+
 
 Acknowledgements
 ================
