@@ -1183,7 +1183,7 @@ class Model(object):
             If the run is to automatically also include parent and child
             entities of explicitly listed spatial entities. The default is
             True.
-        weights : str
+        weights : str, optional
             Name of the parameter that is used to as weight when
             calculating the fraction of parent regions. The parameter needs
             to be defined over the REGION set. If None is given equal weights

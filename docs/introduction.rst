@@ -3,7 +3,7 @@
 Introduction
 ============
 
-fratoo is an open-source multi-scale modelling framework based on `OSeMOSYS <http://www.osemosys.org/>`_. It facilitates the development and analysis of multi-scale energy system models and pathways.
+fratoo is an open-source multi-scale modelling framework based on `OSeMOSYS <http://www.osemosys.org/>`_. It facilitates the development and use of multi-scale energy system models.
 
 **********
 Background
@@ -20,11 +20,10 @@ Concept
 
 fratoo complements this existing pool of energy system optimization frameworks with a focus on facilitating the development of **multi-scale models** to derive scenario pathways that can support multi-scale or polycentric governance of sustainable energy transitions. As such, it is less of a new stand-alone framework but acts as a *frame* around OSeMOSYS.
 
-fratoo aims to add to the existing landscape of frameworks, in particular OSeMOSYS, by pursuing following design goals:
+fratoo aims to add to the existing landscape of frameworks, in particular OSeMOSYS, by pursuing the following design goals:
 
 * To allow for a straightforward and logical way to define and model energy systems across multiple spatial scales
-* To facilitate versatile model runs of different spatial entities and scales, flexible (dis)aggregation of spatial entities and/or results
-* To support prompt analysis of multi-scale results through suitable visualizations
+* To facilitate versatile model runs of different spatial entities and scales, including flexible aggregation of spatial entities
 
 .. note::  To avoid ambiguity, we here refer to *spatial entities* instead of *regions*. While *regions* often refer to separate, not overlapping areas (potentially on the \'regional\' scale), we here use the term *spatial entities*, which refers to spatial areas on any scale, e.g., a local area or an entire country, which can be part of or encompass other entities.
 
@@ -38,7 +37,7 @@ The diagram below gives an overview of general functionality of fratoo:
 fratoo serves as a frame around OSeMOSYS for processing input data, running scenarios, and processing results. It relies on two main inputs:
 
 * a multi-scale input data set (as further explained :doc:`here <building>`)
-* an OSeMOSYS Pyomo model file (for example to be found on the `OSeMOSYS github page <https://github.com/OSeMOSYS/OSeMOSYS>`_)
+* an OSeMOSYS model file (for example to be found on the `OSeMOSYS github page <https://github.com/OSeMOSYS/OSeMOSYS>`_)
 
 Energy systems can be modelled across an arbitrary number of spatial entities (e.g., local areas or regions), which in turn can be defined across an arbitrary number of scales (e.g., local or national scale). Each entity is part of a particular scale and, except the overarching entity (in the example below the UK), has usually a parent entity it is part of on an upper scale. An example structure is shown in the diagram below.
 
@@ -50,10 +49,9 @@ Energy systems can be modelled across an arbitrary number of spatial entities (e
 
 This structure allows for different elements of the energy system to be modelled at different spatial scales based on the required detail or available data. For example, a building heat sector model looking at heat decarbonization in local areas across the country might include a power sector module represented on the national scale.
 
-Based on input data and model file, fratoo allows the flexible generation and optimization of (sub)models, e.g., particular single spatial entities, aggregated entities, or sets of entities, and the post-processing and visualization of results (this is further explained in the :doc:`running` section).
+Based on input data and model file, fratoo allows the flexible generation and optimization of runs, e.g., of particular single spatial entities, aggregated entities, or sets of entities, and the post-processing and visualization of results (this is further explained in the :doc:`running` section).
 
-.. [Explain specifically what's multi-scale about fratoo?]
-.. multiscale definition, multi-scale pathways possible because of versatility of model runs, ...
+
 
 
 *******

@@ -4,9 +4,9 @@ Welcome to fratoo's documentation!
 
 fratoo is an open-source multi-scale modelling framework based on `OSeMOSYS <http://www.osemosys.org/>`_. It facilitates the development and analysis of multi-scale energy system models and pathways.
 
+fratoo has so far been applied for the development of two energy system models: `UK-MOSEM <https://github.com/lhofbauer/uk-mosem>`_ and `CORE-WESM <https://github.com/ClimateCompatibleGrowth/CORE-WESM>`_.
 
-.. warning::
-   fratoo and its documentation are still under heavy development and a more stable version is expected to be published later during 2025.
+This documentation currently focuses on key elements of fratoo and is expected to be extended and updated in future.
 
 Contents
 ========
@@ -18,12 +18,14 @@ Contents
    Installation <installation>
    Building <building>
    Running <running>
-   Tutorial <tutorial>
    Contributions & Help <contributing>
    License <license>
    Authors <authors>
    Changelog <changelog>
-   Module Reference <api/modules>
+
+
+..    Tutorial <tutorial>
+..    Module Reference <api/modules>
 
 Acknowledgements
 ================
@@ -31,12 +33,12 @@ Acknowledgements
 The initial development of fratoo was supported by the Engineering and Physical Sciences Research Council, UK, under grant EP/R513143/1.
 
 
-Indices and tables
-==================
+.. Indices and tables
+.. ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
 
 .. _toctree: https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html
 .. _reStructuredText: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html

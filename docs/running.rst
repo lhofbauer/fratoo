@@ -3,9 +3,9 @@
 Running a model
 ===============
 
-After having :doc:`built a fratoo model <building>`, a wide range of different model runs can be performed.
+After having :doc:`built a fratoo model <building>`, a wide range of different model runs can be performed. 
 
-First, the model, i.e., model equations and input data, has to be loaded:
+First, the model, i.e., model equations and input data, has to be loaded (the workflow shown here assumes a Pyomo-based model file is used):
 
 ::
 
@@ -38,21 +38,22 @@ Finally, results can be visualized, for example:
                         zgroupby="TECHNOLOGY")
 
 
-A detailed description of the plot functions is given in the :doc:`API <api>` and some examples are given below.
+A detailed description of the plot functions is given in the code and some examples are given below.
 
 
 *******************
 Defining model runs
 *******************
 
-As discussed in the :doc:`introduction <introduction>`, being able to flexibly run different geographic entities of the model while potentially (dis)aggregating them or the results is a key feature of fratoo designed to facilitate the creation of scenario pathways and insights relevant across spatial and governance scales.
+As discussed in the :doc:`introduction <introduction>`, being able to flexibly run different geographic entities of the model while potentially aggregating them or the results is a key feature of fratoo designed to facilitate the creation of scenario pathways and insights relevant across spatial and governance scales.
 
-This is implemented through a flexible :meth:`~fratoo.model.Model.perform_runs` method which takes a number of arguments defining the required model runs and saves the results in the ``results`` attribute of the model. It has the following arguments:
+This is implemented through a flexible :meth:`~fratoo.model.Model.perform_runs` method which takes a number of arguments defining the required model runs and saves the results in the ``results`` attribute of the model. It has the following core arguments:
 
 * ``names`` (list): A list of names of the model runs. Model runs can represent, for example, different scenarios for the same spatial entity or runs of different spatial entities.
 * ``entities`` (list): A nested list of the spatial entities explicitly included in each run. Each sublist for a single run includes lists of strings where each subsublist contains the names of the regions part of a single optimization and (optional) subsubsublist (sorry) contain entities that are to be aggregated. This is explained in more detail below. It must be the same length as ``names``.
 * ``func`` (list, optional): A list of functions to be applied to the input data set for each of the model runs. The functions take the input data set in form of a dictionary as parameter and return the amended input data dictionary. It must be the same lengths as ``names``, if given.
 * ``autoinclude`` (bool, optional): A boolean argument deciding if the runs are to automatically also include parent and child entities of explicitly listed ones in ``entities``. The default is *True*.
+* ``weights`` (str, optional): Name of the parameter that is used to as weight when calculating the fraction of parent regions. The parameter needs to be defined over the REGION set. If None is given equal weights are assumed. The default is None.
 * ``processes`` (int, optional): The number of CPU processes to be used to solve model runs. If it is set higher than the number of model runs, the number of model runs is used instead. The default is *1*.
 * ``join_results`` (bool, optional): A boolean argument deciding if results of the runs are to be saved in a combined DataFrame. The default is *False*.
 * ``overwrite`` (bool, optional): A boolean argument deciding if previous results, if existing, are to be overwritten. If *False*, the runs will not proceed if results already exist and a warning is given. The default is *False*.
@@ -60,7 +61,7 @@ This is implemented through a flexible :meth:`~fratoo.model.Model.perform_runs` 
 .. * ``**kwargs`` (optional): Additional arguments to be passed to the solver.
 
 
-The ``entities`` arguments for the ``perform_runs()`` method is the nested list of entities to be considered for the model runs. A break down of the nested list levels is given below based on this example:
+The ``entities`` arguments for the ``perform_runs()`` method is the nested list of entities to be considered for the model runs. A breakdown of the nested list levels is given below based on this example:
 
 ::
 
@@ -73,13 +74,15 @@ The first run comprises one optimization, i.e., ``[["area_1","area_2"],"area_3"]
 
 The first and only optimization of the first run consists of two explicitly listed entities, i.e., ``["area_1","area_2"]`` (an aggregated area consisting of ``"area_1"``  and ``"area_2"``) and ``"area_3"``. The second run's two optimizations consist of a single entity, ``"area_1"``,  and two entities, ``"area_2"`` and ``"area_4"``, respectively.
 
-While creating the ``entities`` list for model runs, it is also important to consider the autoinclude functionality. If ``autoinclude`` is set to *True* (by default, it is), the runs will automatically also include (recursively) parent and child entities of the explicitly listed ones in ``entities``. All child entities on the same scale and with the same explicit parent (i.e., that are included based on the same explicitly listed entity) will be aggregated to a single entity. Parent entities will be disaggregated/only included partially (currently based on the fraction of its child entities part of the optimization) if not all of its child entities are part of the model run. If child entities are to be aggregated, respective parameters will be aggregated based on the rule (e.g., average or sum) given in the input data file ``ft_param_agg.csv``. If parent entities are to be disaggregated, respective parameters will be calculated based on the rule (e.g., equal or fraction) given in the input data file ``ft_param_disagg.csv``. The examples below illustrate this autoinclude functionality.
+While creating the ``entities`` list for model runs, it is also important to consider the autoinclude functionality. If ``autoinclude`` is set to *True* (by default, it is), the runs will automatically also include (recursively) parent and child entities of the explicitly listed ones in ``entities``. All child entities on the same scale and with the same explicit parent (i.e., that are included based on the same explicitly listed entity) will be aggregated to a single entity. Parent entities will be disaggregated/only included partially (with the weights attribute definining which parameter is used to calculate the fraction that is included based on which child regions are included) if not all of its child entities are part of the model run. If child entities are to be aggregated, respective parameters will be aggregated based on the rule (e.g., average or sum) given in the input data file ``ft_param_agg.csv``. If parent entities are to be disaggregated, respective parameters will be calculated based on the rule (e.g., equal or fraction) given in the input data file ``ft_param_disagg.csv``. The examples below illustrate this autoinclude functionality.
 
 --------
 Examples
 --------
 
-Following examples are to illustrate the use of the ``perform_runs()`` function (for complete example models and code refer to the :doc:`tutorial section <tutorial>`). The figure below shows the entities in the multi-scale geography of the example model.
+Following examples are to illustrate the use of the ``perform_runs()`` function. The figure below shows the entities in the multi-scale geography of the example model.
+
+.. (for complete example models and code refer to the :doc:`tutorial section <tutorial>`)
 
 .. figure:: figures/multi-scale_structure_v2.*
    :alt: Exemplary multi-scale geography.
@@ -164,7 +167,10 @@ The figure below shows exemplarily the entities part of the first optimization l
 
     model.perform_runs(names, entities, functions)
 
-As can be seen above, the input data dictionary passed to the scenario functions consists of the parameter names as the keys and Pandas DataFrames of the actual data as the respective values. A more handy way to generate a large number of scenarios or run sensitivity analysis without defining the function for each run by hand is shown in the :doc:`tutorials <tutorial>`.
+As can be seen above, the input data dictionary passed to the scenario functions consists of the parameter names as the keys and Pandas DataFrames of the actual data as the respective values.
+
+.. A more handy way to generate a large number of scenarios or run sensitivity analysis without defining the function for each run by hand is shown in the :doc:`tutorials <tutorial>`
+
 The figure below shows the entities part of each of the runs. It includes 3 spatial entities: an aggregated area of Camden and Islington, (partial) England, and the (partial) UK.
 
 .. figure:: figures/multi-scale_structure_example_4.*
@@ -178,7 +184,7 @@ The figure below shows the entities part of each of the runs. It includes 3 spat
 Visualizing results
 *******************
 
-fratoo provides a few flexible plotting functions for a quick analysis of model runs. For more specialized plots, results data can be accessed through the ``results`` dictionary and plotted by hand in Python or externally, e.g., in a spreadsheet.
+fratoo provides a few flexible plotting functions for a quick analysis of model runs. For more specialized plots, results data can be accessed through the ``results`` dictionary and plotted manually in Python or otherwise, e.g., in a spreadsheet.
 
 There are two main plotting methods, :meth:`~fratoo.model.Model.plot_results` for graphs and :meth:`~fratoo.model.Model.plot_map` for maps. Moreover, two methods that use the former are introduced to quickly plot standard graphs, i.e., :meth:`~fratoo.model.Model.plot_capacity` and :meth:`~fratoo.model.Model.plot_generation`. Some examples are shown below.
 

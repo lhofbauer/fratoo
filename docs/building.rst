@@ -3,16 +3,17 @@
 Building a model
 ================
 
-A fratoo model consists of two elements: a file describing the model equations and an input data set.
+A fratoo model consists of two main elements: a file describing the model equations and an input data set.
 
 ***************
 Model equations
 ***************
 
-The first step in building a fratoo model is establishing the model equations by setting up an OSeMOSYS (Pyomo-based) model file, i.e., a Python file defining a `Pyomo <http://http://www.pyomo.org/>`_  abstract model. A model file can be downloaded from the `OSeMOSYS github page <https://github.com/OSeMOSYS/OSeMOSYS>`_ and either be used directly or amended in order to add/alter functionality. 
+The first step in building a fratoo model is establishing the model equations by setting up an OSeMOSYS  model file. A model file can be downloaded from the `OSeMOSYS github page <https://github.com/OSeMOSYS/OSeMOSYS>`_ and either be used directly or amended in order to add or alter functionality. 
+
+The model file can either be Pyomo-based , i.e., a Python file defining a `Pyomo <http://http://www.pyomo.org/>`_  abstract model, and this be directly used within the framework, or be non-Pyomo-based. If the model file is not Pyomo-based, fratoo is simply used to pre- and post-process and the optimization step needs to be handled by the user.
 
 A detailed description of the standard OSeMOSYS model file and its sets, parameters, variables, and equations can be found in the `OSeMOSYS documentation <https://osemosys.readthedocs.io/en/latest/manual/Structure%20of%20OSeMOSYS.html>`_. A detailed description of Pyomo and how to build Pyomo models can be found `here <https://pyomo.readthedocs.io/en/stable/>`_.
-
 
 
 
@@ -20,7 +21,7 @@ A detailed description of the standard OSeMOSYS model file and its sets, paramet
 Input data 
 **********
 
-After defining the model structure, the second part of building a fratoo model is setting up the input data, e.g., capital cost of technologies. The sets and parameters to be defined in the input data depend on the model structure, i.e., model equations. A description of the sets and parameters to be defined for a standard OSeMOSYS model (and thus for a fratoo model using the standard OSeMOSYS code) can be found in the `OSeMOSYS docs <https://osemosys.readthedocs.io/en/latest/manual/Structure%20of%20OSeMOSYS.html>`_.
+The second part of building a fratoo model is setting up the input data, e.g., capital cost of technologies. The sets and parameters to be defined in the input data depend on the model structure, i.e., model equations. A description of the sets and parameters to be defined for a standard OSeMOSYS model (and thus for a fratoo model using the standard OSeMOSYS code) can be found in the `OSeMOSYS docs <https://osemosys.readthedocs.io/en/latest/manual/Structure%20of%20OSeMOSYS.html>`_.
 
 fratoo introduces 3 major additions/changes to the 'standard' OSeMOSYS input data set:
 
@@ -44,7 +45,7 @@ The data package consist of a
 * JSON metadata file, and
 * the data files in the data directory.
 
-The data are a set of CSV files, one for each OSeMOSYS parameter and set. As such, fratoo can be used with standard OSeMOSYS input data sets. If a multi-scale model is to be built, 4 additional files are necessary, which are further explained below.
+The data files are a set of CSV files, one for each OSeMOSYS parameter and set. As such, fratoo can be used with standard OSeMOSYS input data sets. If a multi-scale model is to be built, 4 additional files are necessary, which are further explained below.
 
 
 CSV files defining parameters or sets are defined in a simple tabular manner, as shown in the exemplary tables below.
@@ -86,7 +87,7 @@ This approach allows to build models of a particular geographic area, e.g., a co
 
 This structure comes into play when specifying OSeMOSYS parameters that vary across spatial entities, i.e., that are defined over the set *REGION* as, for example, capital cost. These parameters are then, similarly to a normal OSeMOSYS model, defined for a specific geographic entity on the particular scale. The following table shows an example.
 
-.. csv-table:: Parameter: capital cost | CaptialCost.csv
+.. csv-table:: Parameter: capital cost | CapitalCost.csv
    :file: figures/CapitalCost.csv
    :header-rows: 1
 
