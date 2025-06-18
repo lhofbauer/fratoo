@@ -19,14 +19,11 @@ import datetime
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 
 
 import json
 
 import itertools
-
-
 
 
 try:
@@ -107,7 +104,7 @@ class Model(object):
     # input_data  
     # ms_struct
 
-    # FIXME: Format/blacken again at some point
+    # FIXME: Format again at some point
     # FIXME: Add function to save (processed) input data set, or run data set
     # FIXME: consider handling of dtypes, make sure dtypes are processed properly
     # FIXME: update docstring(s) where required
@@ -115,14 +112,13 @@ class Model(object):
     # (at the moment they are deleted from params but included in sets)
     # FIXME: reconsider use of pandas multiindex and check if all use of it
     # (especially indexing) makes sense and is not dependant on region being
-    # first column of index etc.
-    # FIXME: rename region(s)/etc. to entities
-    # FIXME: consider where does all of this assume a specific structure of the
+    # first column of index, etc.
+    # FIXME: rename region(s)/etc. to entities (?)
+    # FIXME: consider where all of this assumes a specific structure of the
     # Pyomo/OSeMOSYS model (e.g., plotting capacity assumes specific variable
     # is existing, etc.) and should it be like this, should it be articulated
     # somewhere
-    def __init__(self, data=None, model=None, process=False, tempdir=None,
-                 *args, **kwargs):
+    def __init__(self, data=None, model=None, process=False, tempdir=None):
         """Return an empty or initialised model.
         
         
@@ -131,7 +127,7 @@ class Model(object):
         data : str, optional
             Path to datapackage file. The default is None.
         model : str, optional
-            Path to OSeMOSYS file. The default is None.
+            Path to OSeMOSYS Pyomo file. The default is None.
         process : bool, optional
             Specifies whether to process input data (e.g., abbreviations) or
             not. The default is False.
@@ -139,17 +135,12 @@ class Model(object):
             Specifies temporary directory for pyomo. If None is given, no
             directory will explicitly be provided to pyomo.
             The default is None.
-        *args : TYPE
-            DESCRIPTION.
-        **kwargs : TYPE
-            DESCRIPTION.
 
         Returns
         -------
         None.
 
         """
-        # FIXME: *args/**kwargs arguments necessary? Remove ?
         
         logger.info("Initializing model")
 
@@ -492,6 +483,10 @@ class Model(object):
             calculating the fraction of parent regions. The parameter needs
             to be defined over the REGION set. If None is given equal weights
             are assumed.
+        syn: list of str, optional
+            Syntax used if aggregated regions are represented. syn[0] is the
+            separator between scale and region, syn[1] a letter symbolize
+            an aggregate region.
 
         Returns
         -------
@@ -501,7 +496,7 @@ class Model(object):
         """
         # FIXME: potentially use better structure , i.e., not through a dict
         # format of r:[type,eparent] (?)    
-        # FIXME: make possibility to aggregate nicer
+        # FIXME: make possibility to aggregate better
         # 1) not under eparent - change approach
         # 2) proper name for aggregated areas (child and others)
         # FIXME: if not multi-scale, it will expect no aggregation, i.e. flat
@@ -539,7 +534,6 @@ class Model(object):
         # use flattened list
         oregions = regions
         regions = list(dregions.keys())
-        
         # if autoinclude, add child and parent entities recursively
         if autoinclude:
             
@@ -561,7 +555,8 @@ class Model(object):
                         
                     dregions.update(
                         [
-                            (a, [1, r])
+                            (a, [1, r]) #if (dregions[r][0]==0) else
+                            #(a, [1, dregions[r][2]])
                             for a in new_children
                             if not (a in dregions.keys()
                                     and dregions[a][0] == 0)
@@ -692,7 +687,7 @@ class Model(object):
         redset : boolean, optional
             If to create reduced sets.
         pyomo : boolean, optional
-            If pyomo model or basic run data.
+            If pyomo model or basic run data are to be created.
             
         Returns
         -------
@@ -710,7 +705,7 @@ class Model(object):
         # e.g. two transmission techs with same name have to be aggregated 
         # (should result in two different data rows with same tech but
         # different fuel, so probably just one considered)
-        # FIXME: check if this function really also works if autoinclude
+        # FIXME: crosscheck if this function really also works if autoinclude
         # is false but regions are aggregated, i.e., mock child entities exist
         
         logger.info("Creating pyomo data dictionary")
@@ -748,10 +743,10 @@ class Model(object):
                 :,
             ]
             
-            # FIXME: maybe this can be done nicer without adding type, etc. to
+            # FIXME: maybe this can be done better without adding type, etc. to
             # data, not having to concat everything in the end, etc. (-> maybe
             # using apply function as below in the end of the function)
-            # FIXME: might fail if fratoo syntax  but model not multi-scale,
+            # FIXME: might fail if fratoo syntax but model not multi-scale,
             # i.e., df_regions doesn't have type, etc. columns
             
             # process data for fuels set with explicit region in the input
@@ -889,7 +884,7 @@ class Model(object):
                     )
                       
                         
-            # FIXME: could be done nicer (?), e.g., no concat, use of idx, ...
+            # FIXME: could be done better (?), e.g., no concat, use of idx, ...
             
             # process for child regions, i.e., aggregate for all child regions
             # on same scale and with same explicit parent (same for aggregated
@@ -1370,12 +1365,13 @@ class Model(object):
         
         if duals is not None:
             pm.dual = pyo.Suffix(direction=pyo.Suffix.IMPORT)
-        # FIXME: delete this
+        # FIXME: delete this if not required
         # logger.info("Create matrix")
         # pm.write("mod.lp")
         # logger.info("Created matrix")
         
-        # FIXME: delete this, or include in warmstart functionality properly
+        # FIXME: delete this, or include warmstart functionality properly
+        # this is currently not working
         if warmstart:
             if not os.path.exists("./warmstart/"):
                 os.makedirs("./warmstart/")
@@ -1533,7 +1529,7 @@ class Model(object):
                 and v.default()<=0):
                 df = df[~(df["VALUE"]==v.default())]
 
-            # FIXME: make this nicer, the conditions and search for index names
+            # FIXME: improve, the conditions and search for index names
             # convert to multiindex if necessary and set index names
             if isinstance(v, pyo.Set):
                 pass
@@ -1691,8 +1687,7 @@ class Model(object):
 
         """
         
-        # FIXME: implement filters before groupby, and just everything better/
-        # more flexible
+        # FIXME: implement filters before groupby
         
         if not hasattr(self, "results") and not isinstance(var,pd.DataFrame):
             logger.warning("No results to be plotted found.")
@@ -1812,14 +1807,13 @@ class Model(object):
                                else slice(None)
                                for n in df.index.names]),:]
             
-        # FIXME: remove this/implement differently - just important if some
-        # very small negative values come out of optimization
+
         # clean up
 
         if  cleanup:
             # remove any negative numbers (due to inaccuracies when solving)
             df[df<0] = 0
-            # remove any columns if all values are zero (tolerance of 10^-14)
+            # remove any columns if all values are zero (tolerance of 10^-20)
             df = df.loc[:,df.max()>10**-20]
     
         
@@ -2024,8 +2018,7 @@ class Model(object):
         # FIXME: improve overall (e.g., some mapfile.dissolve approach to be 
         # able to aggregate and plot different scales with same mapdata)
        
-        
-        
+
         # FIXME: implement filters before groupby, and just everything better/
         # more flexible
         
@@ -2259,8 +2252,7 @@ class Model(object):
 
         return fig,df
 
-
-        
+    
 
     def get_entities(self, scale=None):
         """ Get spatial entities of model.
@@ -2290,13 +2282,13 @@ class Model(object):
     
     def _demap(self, datadict, sep=":"):
         
-        # FIXME: improve function, make more efficient (!)
+        # FIXME: improve function, make more efficient 
         
         data = dict()
         
         for var, df_values in datadict.items():
 
-            #logger.info("demap:"+str(var))
+
             # process results if indexed over region set, i.e., pull region
             # out of other sets (fuel, technology, etc.) if not explicitely
             # given/different to actual region (only in the case of fuel or 
@@ -2375,8 +2367,8 @@ class Model(object):
                 else:
                     df_values.index = pd.MultiIndex.from_frame(idx)
                     df_values = df_values.sort_index()
-                    #df_values = df_values.explode("REGION")
-            #logger.info("demap2")    
+
+                    
             if (isinstance(df_values,pd.DataFrame) and var.isupper() 
                 and not df_values.empty):
                 if var=="TECHNOLOGY":
@@ -2420,20 +2412,27 @@ class Model(object):
         return data
     
 
-    def expand_results(self, params=None):
-        # FIXME: Improve, add comments, docstring, etc.
-        # currently processing in any case - these are basic results and quick
-        # to calculate
+    def expand_results(self):
+        """ Expand results.
+        
+
+        Parameters
+        ----------
+        -
+
+        Returns
+        -------
+        -
+
+        """
+
         logger.info("Expanding results")
        
-        # if params is None:
-        #     return
         
         results = self.results.copy()
        
         for i in range(len(results)):
             
-            #if ("basic" in params) or ("extendedcost" in params):
             # calculate and add basic result variable to result data
             # fill in missing operational lifes with default 1 year
             results[i]["OperationalLife"] = results[i]["OperationalLife"].reindex(results[i]["NewCapacity"].add(
@@ -2538,11 +2537,9 @@ class Model(object):
                                         ).add(
                                         results[i]["CostVariable"], fill_value=0
                                         ))
-            # FIXME: add comment below to some check
-            # sum of above has been compared with objective value and it
-            # seems fine                                
+                            
                                                      
-            # FIXME: include storage cost once implemented in model file, etc.
+            # FIXME: include storage cost and others
             # results[i]["CostCapitalStorage"] = (results[i]["NewStorageCapacity"]
             #                              *results[i]["CapitalCostStorage"]
             #                              /results[i]["DiscountFactor"]).subtract(
@@ -2558,36 +2555,47 @@ class Model(object):
         return
     
     def aggregate_results(self):
-        #FIXME: Improve, add comments, docstring, etc.
+        """ Aggregate results.
+        
+
+        Parameters
+        ----------
+        -
+
+        Returns
+        -------
+        -
+
+        """
         logger.info("Aggregating results")
-        logger.info("1")
+
         results = self.results.copy()
         res = list()
        
-        logger.info("2")
+
         if len(results) == 1:
             res = res + results
 
         else:
             result = results[0]
-            logger.info("3")
+
     
             for k,v in result.items():
                 if k == "name":
                     result[k] = "aggregation_of_runs"
                     continue
-                logger.info("4")
+
                 v = pd.concat([v]+[r[k] for r in results[1:] if k in r],
                               axis=0,join="inner")
-                logger.info("5")
+
                 logger.info(len(v))
                 result[k] = v
                 # result[k] = v.groupby(level=[i for i in
                 #                       range(v.index.nlevels)]).sum()
                 logger.info(len(result[k]))
-                logger.info("6")
+
             res.append(result)
-            logger.info("7")
+
             
         self.results = res
         return
@@ -2645,7 +2653,7 @@ class Model(object):
         return
     
 
-    def load_results(self, path, exclude=None):
+    def load_results(self, path, exclude=None, include = None):
         """Load results from zip files into the model.
         
 
@@ -2655,8 +2663,11 @@ class Model(object):
             Path for a result file or to the directory where one or more the 
             results zip files are saved. All zip files in the folder will be 
             loaded.
-        data: str
+        exclude: str, optional
             List of parameter and variable names to be excluded. The 
+            default is None.
+        include: str, optional
+            List of parameter and variable names to be included. The 
             default is None.
 
         Returns
@@ -2679,7 +2690,7 @@ class Model(object):
             packf = [path]
         
         else:
-            # add seperator in the end if not present
+            # add separator in the end if not present
             path = os.path.join(path, '')
         
             # create list of all zip files in directory
@@ -2701,6 +2712,8 @@ class Model(object):
             run['name'] = pack.name
             for r in pack.resources:
                 if exclude is not None and r.title in exclude:
+                    continue
+                if include is not None and r.title not in include:
                     continue
                 run[r.title] = pd.read_csv(zf.open(r.path),
                                            index_col=r.schema['primaryKey'],
@@ -2731,8 +2744,6 @@ class Model(object):
         # (multi-scale regions present in param/set files, etc.)
         # FIXME: introduce check in consistency of multi-scale data (e.g.,
         # should be checked if parents are always on higher scale)?
-        # FIXME: potential for loads of other (unecessary?) checks (all params
-        # set for sets, etc.)
         pass
 
     
@@ -2742,7 +2753,20 @@ class Model(object):
     
     
     def get_model_data(self, ms=False):
+        """Get input data from model.
         
+
+        Parameters
+        ----------
+        ms : bool, optional
+            If multi-scale parameters are to be included. The default is False.
+
+
+        Returns
+        -------
+        None.
+
+        """
         if not hasattr(self,"input_data"):
             raise AttributeError("Input data can not be retrieved as they are"+
                                  " not existing.")

@@ -42,8 +42,8 @@ This repository contains the code and documentation of fratoo.
 
 The documentation is also hosted on `ReadTheDocs <https://fratoo.readthedocs.io/en/latest/>`_.
 
-.. warning::
-   fratoo and its documentation are still under heavy development and a more stable version is expected to be published later during 2025.
+
+fratoo has so far been applied for the development of two energy system models: `UK-MOSEM <https://github.com/lhofbauer/uk-mosem>`_ and `CORE-WESM <https://github.com/ClimateCompatibleGrowth/CORE-WESM>`_.
 
 
 Acknowledgements
